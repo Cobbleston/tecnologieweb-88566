@@ -1,0 +1,145 @@
+swagger: "2.0"
+info:
+  description: "API Ristorante"
+  version: "0.0.1"
+  title: "API Ristorante"
+  
+host: "tw.cs.unibo.it"
+basePath: "/v1"
+
+paths:
+  # Elenco menu
+  /menu/:
+    get:
+      responses:
+        200:
+          description: "Ok"
+          schema:
+            type:
+              array
+            items:
+              $ref: "#/definitions/Menu"
+        400:
+          description: "Error"
+  
+  # Menu specifico
+  /menu/{idMenu}:
+    get:
+      parameters:
+        - name: idMenu
+          in: path
+          type: integer
+          format: int64
+          required: true
+      responses:
+        200:
+          description: "Ok"
+          schema:
+            $ref: "#/definitions/Menu"
+        400:
+          description: "Error"
+    delete:
+      parameters:
+        - name: idMenu
+          in: path
+          type: integer
+          format: int64
+          required: true
+      responses:
+        200:
+          description: "Ok"
+          #schema: # Lo inserisco solo se mi interessa sapere il menù cancellato
+          #  $ref: "#/definitions/Menu"
+        400:
+          description: "Error"
+
+  /menu/{idMenu}/piatti/:
+  # Elenco di piatti
+    get:
+      parameters:
+        - name: idMenu
+          in: path
+          type: integer
+          format: int64
+          required: true
+      responses:
+        200:
+          description: "Ok"
+          schema:
+            type:
+              array
+            items:
+              $ref: "#/definitions/Piatto"
+        400:
+          description: "Error"
+  
+  # Aggiungo un piatto
+    post:
+      parameters:
+        - name: idMenu
+          in: path
+          type: integer
+          format: int64
+          required: true
+        - name: nuovoPiatto
+          in: body
+          required: true
+          schema:
+            $ref: "#/definitions/Piatto"
+      responses:
+        200:
+          description: "Ok"
+          schema:
+            type:
+              array
+            items:
+              $ref: "#/definitions/Piatto"
+        400:
+          description: "Error"
+          
+  # Cancellazione di tutti i piatti di un menu
+    delete:
+      parameters:
+        - name: idMenu
+          in: path
+          type: integer
+          format: int64
+          required: true
+      responses:
+        200:
+          description: "Ok"
+          #schema: # Lo inserisco solo se mi interessa sapere il menù cancellato
+          #  type:
+          #    array
+          #  items:
+          #    $ref: "#/definitions/Piatto"
+        400:
+          description: "Error"
+          
+schemes:
+- "http"
+
+definitions:
+  Menu:
+    type: object
+    required:
+      - identificativo
+      - titolo
+    properties:
+      identificativo:
+        type: integer
+        format: int64
+      titolo:
+        type: string
+
+  Piatto:
+    type: object
+    required:
+      - identificativo
+      - nome
+    properties:
+      identificativo:
+        type: integer
+        format: int64
+      nome:
+        type: string

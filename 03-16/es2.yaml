@@ -1,0 +1,129 @@
+swagger: "2.0"
+info:
+  description: "API Piattaforma VideoGames"
+  version: "0.0.1"
+  title: "API Piattaforma VideoGames"
+  
+host: "tw.cs.unibo.it"
+basePath: "/v1"
+
+paths:
+  /giochi/:
+    get:
+      description: Prendi la lista dei giochi, eventualmente filtrati da una categoria
+      parameters:
+        - name: categoria
+          in: query
+          required: false
+          type: string
+      responses:
+        200:
+          description: "Ok"
+          schema:
+            type:
+              array
+            items:
+              $ref: "#/definitions/Gioco"
+        400:
+          description: "Error"
+          
+    post:
+      description: Aggiungi una lista di giochi all'elenco
+      parameters:
+        - name: listaGiochi
+          in: body
+          required: true
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/Gioco"
+      responses:
+        200:
+          description: "Ok"
+        400:
+          description: "Error"
+
+  /giochi/{idGioco}:
+    get:
+      description: Prendi un gioco datop l'id
+      parameters:
+        - name: idGioco
+          in: path
+          type: integer
+          format: int64
+          required: true
+      responses:
+        200:
+          description: "Ok"
+          schema:
+            $ref: "#/definitions/Gioco"
+        400:
+          description: "Error"
+
+    post:
+      description: Aggiorna un gioco dato l'id
+      parameters:
+        - name: idGioco
+          in: path
+          type: integer
+          format: int64
+          required: true
+        - name: updatedGame
+          in: body
+          required: true
+          schema:
+            $ref: "#/definitions/Gioco"
+      responses:
+        200:
+          description: "Ok"
+        400:
+          description: "Error"
+          
+    delete:
+      description: Rimuovi un gioco
+      parameters:
+        - name: idGioco
+          in: path
+          type: integer
+          format: int64
+          required: true
+      responses:
+        200:
+          description: "Ok"
+        400:
+          description: "Error"
+
+schemes:
+- "http"
+
+
+definitions:
+  Gioco:
+    type: object
+    required:
+      - identificativo
+      - nome
+      - categoria
+      - minGiocatori
+      - maxGiocatori
+    properties:
+      identificativo:
+        type: integer
+        format: int64
+      nome:
+        type: string
+      categoria:
+        type: string
+        enum:
+          - Shooter
+          - Adventure
+          - Puzzle
+          - Sport
+      minGiocatori:
+        type: integer
+        format: int64
+      maxGiocatori:
+        type: integer
+        format: int64
+
+
