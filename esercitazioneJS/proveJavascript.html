@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Prove Javascript</title>
+    <script type="text/javascript">
+        // Es1
+        //34function onclick_fn()
+        //34{
+        //34    alert('Hello world!')
+        //34}
+
+        //onclick_fn = x => alert('Hello world!');
+
+        // Es2
+        //onclick_fn = x => {
+        //        var inner_html = document.getElementsByTagName('head')[0].innerHTML;
+        //        
+        //        // var txt = document.getElementById(“para1”).textContent; // NO, MAI
+        //        // txt = inner_html;
+        //        
+        //        var para1 = document.getElementById('para1');
+        //        para1.textContent = inner_html;
+        //    }
+
+        // Es3
+        onclick_fn = x => {
+            var button = document.getElementsByTagName('button')[0];
+            var para1 = document.getElementById('para1');
+
+            button.disabled = true;
+            var max_sec = sec = 10;
+
+            para1.textContent = 0;
+
+            var timer = setInterval(function() {
+                para1.textContent = max_sec - (--sec);
+                if (sec <= 0) {
+                    clearInterval(timer);
+                    button.disabled = false;
+                }
+            }, 1000)
+        }
+
+        // Es4
+            var get_request = (path) => {
+                return new Promise((success, error) => {
+                    var xhr = new XMLHttpRequest();
+                    xhr.onreadystatechange = function () {
+                        if (xhr.readyState === XMLHttpRequest.DONE) {
+                            if (xhr.status === 200) {
+                                success(JSON.parse(xhr.responseText));
+                            } else {
+                                error(xhr);
+                            }
+                        }
+                    };
+                    xhr.open("GET", path, true);
+                    xhr.send();
+                });
+            };
+
+            function tableCreate(val) {
+                var body = document.getElementsByTagName('body')[0];
+                var tbl = document.createElement('table');
+                tbl.style.width = '100%';
+                tbl.setAttribute('border', '1');
+                var tbdy = document.createElement('tbody');
+                // head
+                var tr = document.createElement('tr');
+                for (var cell of Object.keys(val[0])) {
+                    var td = document.createElement('th');
+                    td.appendChild(document.createTextNode(cell))
+                    tr.appendChild(td)
+                }
+                tbdy.appendChild(tr);
+
+                for (var row of val) {
+                    var tr = document.createElement('tr');
+                    for (var cell of Object.values(row)) {
+                        var td = document.createElement('td');
+                        td.appendChild(document.createTextNode(cell))
+                        tr.appendChild(td)
+                    }
+                    tbdy.appendChild(tr);
+                }
+                tbl.appendChild(tbdy);
+                body.appendChild(tbl)
+            }
+            var onclick_fn = () => {
+                const promise = get_request('http://simone.canova2.tw.cs.unibo.it/test.json');
+                promise.then(val => {
+                    console.log("asynchronous logging has val:", val);
+                    tableCreate(val);
+                });
+            };
+    </script>
+</head>
+
+<body>
+    <h1>Prove Javascript</h1>
+    <p id="para1">Un paragrafo di prova.</p>
+    <button type="button" onclick="onclick_fn()">Clicca qui</button>
+</body>
+
+</html>
