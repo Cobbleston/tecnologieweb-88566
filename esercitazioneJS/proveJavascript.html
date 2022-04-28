@@ -24,23 +24,23 @@
         //    }
 
         // Es3
-        onclick_fn = x => {
-            var button = document.getElementsByTagName('button')[0];
-            var para1 = document.getElementById('para1');
-
-            button.disabled = true;
-            var max_sec = sec = 10;
-
-            para1.textContent = 0;
-
-            var timer = setInterval(function() {
-                para1.textContent = max_sec - (--sec);
-                if (sec <= 0) {
-                    clearInterval(timer);
-                    button.disabled = false;
-                }
-            }, 1000)
-        }
+        //onclick_fn = x => {
+        //    var button = document.getElementsByTagName('button')[0];
+        //    var para1 = document.getElementById('para1');
+//
+        //    button.disabled = true;
+        //    var max_sec = sec = 10;
+//
+        //    para1.textContent = 0;
+//
+        //    var timer = setInterval(function() {
+        //        para1.textContent = max_sec - (--sec);
+        //        if (sec <= 0) {
+        //            clearInterval(timer);
+        //            button.disabled = false;
+        //        }
+        //    }, 1000)
+        //}
 
         // Es4
             var get_request = (path) => {
@@ -85,10 +85,10 @@
                     tbdy.appendChild(tr);
                 }
                 tbl.appendChild(tbdy);
-                body.appendChild(tbl)
+                body.appendChild(tbl);
             }
             var onclick_fn = () => {
-                const promise = get_request('http://simone.canova2.tw.cs.unibo.it/test.json');
+                const promise = get_request('http://localhost:5500/esercitazioneJS/test.json');
                 promise.then(val => {
                     console.log("asynchronous logging has val:", val);
                     tableCreate(val);
