@@ -25,6 +25,7 @@
 - Librerie che rendono più ricco, sofisticato e semplice l'uso di una tecnologia, come un linguaggio (client/server-side) o le specifiche grafiche di una pagina web
 
 ## API
+**Application Programming Interface**
 - Librerie, protocolli e strumenti per utilizzare algoritmi e servizi messi a disposizione da un software da parte di un altro software
 - Si ricorre ad esse per integrare più servizi in un'applicazione più ricca e potente di quelle utilizzate come base
 
@@ -363,3 +364,673 @@ HTTP permette lo scambio di risorse identificate da URI
 Separa le risorse dallal loro rappresentazione
 
 Implementa politiche di caching che permettono di memorizzare copie delle risorse sui server (proxy, gateway, etc.) coinvolti nella trasmissione e controllare la validità di queste copie
+
+## Ruoli delle applicazioni HTTP
+**Client**: Applicazione che stabilisce una connessione HTTP, con scopo di mandare richieste
+
+**Server**: Applicazione ch eaccetta connessioni HTTP, che genera risposte
+
+**User Agent**: Particolare client ch einizia una richiesta HTTP (tipicamente un browser)
+
+**Origin server**: server che possiede fisicamente la risorsa
+
+## Connessione HTTP
+È composta da una serie di richieste e una serie corrispondente di risposte
+
+Le connessioni sono **persistenti** con:
+- **Pipeling**: trasmissione di più richieste senza attendere la risposta della precedente. Le risposte però arrivano in ordine
+- **Multiplexing**: richieste e risposte in sequenza in ordine sparso, sono poi *ricostruite* dal client
+
+## HTTP/2
+Il *Multiplexing* è stato introdotto con HTTP/2
+
+È la seconda major revision di HTTP, non è una riscrittura del protocollo ed è pensato per ridurre i tempi di latenza di HTTP
+
+Ha introdotto il supporto ad operazioni di *Push* da parte del server
+
+Stessi ruoli, verbi e headers di HTTP/1.1, i messaggi però non sono più plaintext ma compressi, e separando header da payload
+
+## Richiesta HTTP
+Si compone da:
+- **Method**: azione del server richiesta dal client (Es. GET)
+- **URI**: identificativo della risorsa *locale al server*
+- **Version**: versione di HTTP
+- **Header**: linee RFC822 divise in
+  - Header *generali*
+  - Header di *entità*
+  - Header di *richiesta*/*risposta*
+- **Body**: messaggio MIME
+
+## Metodi HTTP (introduzione)
+Indicano l'azione che il client richiede al server sulla risorsa (chiamati anche *verbi* HTTP)
+
+Un uso corretto dei metodi HTTP aiuta a creare applicazioni interoperabili e in grado di sfruttare al meglio i meccanismi di caching di HTTP
+
+Metodi principali: GET, HEAD, POST, PUT, DELETE, OPTIONS, PATCH
+
+## GET
+Viene attivato facendo click su un link ipertestuale o specificando un URL, usato per ricevere informazioni
+
+    GET /courses/tw.html
+    GET /students/123456/exams
+
+## POST
+Trasmette informazioni dal client al server relative alla risorsa identificata nell'URI
+
+    POST /courses/1678
+    {
+        "titolo":"Tecnologie Web"
+        "descrizione":"Il corso..bla..bla.."
+    }
+
+## Riposta HTTP
+Composta da:
+- Status code: indica se la richiesta è andata a buon fine
+- Version: versione HTTP
+- Header: uguale alla richiesta
+- Body: messaggio MIME
+
+## Status Code
+Numero di 3 cifre, la prima indica la classe della risposta
+- 1xx - Informational: Risposta temporanea della richiesta, ancora in svolgimento
+- 2xx - Successful: Richiesta ricevuta, capita e accettata dal server
+- 3xx - Redirection: Richiesta corretta, ma sono necessarie altre azioni da parte del client
+- 4xx - Client error: Errore da parte del client
+- 5xx - Server error: Errore dal parte del server (Nota: la richiesta potrebbe essere corretta)
+
+Un uso corretto degli status code serve per costruire API chiare, così da non aver bisogno di leggere il body per sapere l'esito della richiesta
+
+## Header
+Righe di testo che specificano informazioni aggiuntive
+| | Richiesta | Risposta |
+| --- | --- | --- |
+| Header Generali | Informazioni sulla trasmissione | Informazioni sulla trasmissione | 
+| Header di entità | Informazioni sulla risorsa e i dati trasmessi | Informazioni sulla risorsa e i dati trasmessi |
+| Header di richiesta/risposta | Informazioni sulla richiesta effettuata | Informazioni sulla risposta generata |
+
+### Header Generali
+Si applicano solo al messaggio trasmesso, non necessariamente alla risorsa trasmessa
+
+Esempi:
+- Date: data e ora della trasmissione
+- Transfer-Encoding: formato di codifica
+- Cache-Control: tipo di meccanismo di caching richiesto o suggerito
+- Connection: tipo di connessione da usare
+
+### Header dell'Entità
+Informazioni sul body del messaggio o sulla risorsa specificata
+
+Esempi:
+- Content-Type: tipo MIME dell'entità nel body
+- Content-Length: lunghezza in byte del body
+- Content-Encoding: formato di codifica
+
+### Header della Richiesta
+Posti dal client per specificare informazioni sulla richiesta
+
+Esempi:
+- User-Agent: stringa che descrive il client
+- Referer: URL della pagina originale da cui l'utente chiede il nuovo URL
+- Host: nome del dominio e porta a cui viene fatta la connessione
+
+### Header della Risposta
+Posti dal server per specificare informazioni sulla risposta
+
+Esempi:
+- Server: stringa che descrive il server
+- WWW-Authenticate: challenge utilizzata per i meccanismi di autenticazione
+
+### Content-Type
+Nel caso venga fornita un'entità in risposta gli header `Content-type`e `Content-length` sono obbligatori, così da processare correttamente la risorsa
+
+## Metodi HTTP
+<a href="Metodi HTTP (introduzione)">Introduzione</a>
+
+### Proprietà dei metodi
+#### **SICUREZZA**
+Un metodo è sicuro se non genera cambiamenti dello stato interno del server
+
+#### **IDEMPOTENZA**
+Un metodo è idempotenete se l'effetto sul server di più richieste identiche è lo stesso di una singola richiesta
+
+### GET
+Sicuro e idempotente
+
+### HEAD
+Simile a GET, ma il server deve rispondere solo con gli header
+
+Sicuro e idempotente
+
+### POST
+Trasmette informazioni al server riguardo ad una risorsa
+
+Non è nè sicuro nè idempotente
+
+### PUT
+Trasmette informazioni al server, **creando o sostituendo** la risorsa specificata
+
+PUT è idempotente ma non sicuro
+
+### DELETE
+Rimuove completamente una risorsa
+
+Ammesso fare DELETE su una risorsa non esistente, non genera errore
+
+È idempotente e non sicuro
+
+### PATCH
+Aggiorna parte della risorsa identificata
+
+Modifiche incrementali, non sovrascrive la risorsa
+
+PATCH non è nè sicuro nè idempotente
+
+### OPTIONS
+Usato per verificare *opzioni*, *requisiti* e *servizi* di un server, senza una richiesta vera e propria
+
+Usato per il problema del **cross-site scripting** (CORS)
+
+Sia sicuro che idempotente
+
+### Riassumendo
+| Metodo | Idempotenza | Sicurezza | 
+| :--- | :---: | :---: |
+| GET | YES | YES |
+| HEAD | YES | YES |
+| OPTION | YES | YES |
+| DELETE | YES | NO |
+| PUT | YES | NO |
+| PATCH | NO | NO |
+| POST | NO | NO |
+
+# API REST
+## API Web
+*Application Programming Interface* Web
+
+Descrive un'interfaccia HTTP che permette ad applicazioni remote di utilizzare servizi dell'applicazione
+
+Il programmatore dell'applicazione server-side non dovrebbe sapere se la richiesta arriva da un modulo interno dell'applicazione o da una richiesta HTTP esterna
+
+## Modello CRUD
+*Pattern* tipico delle *applicazioni* di trattamento dei *dati*
+- **Create**: inserimento nel database di un nuovorecord
+- **Read**: accesso in lettura al database
+- **Update**: aggiornamento di un campo di un oggetto
+- **Delete**: rimozione di un oggetto dal database
+
+## REST
+**REpresentional State Transfer**, modello architetturale che sta dietro al WWW e dietro alle applicazioni "ben fatte" secondo i progettisti di HTTP
+
+Applicazioni non REST si basano sulla generazione di un API che specifica le funzioni messe a disposizione dell'applicazione, e alla creazione di un'interfaccia **indipendente dal protocollo** di trasporto e ad essa **completamente nascosta**
+
+Un'applicazione REST invece si bassa sul protocollo di traspoorto e di naming (HTTP e URI) per generare interfacce **generiche** di interazione, e **fortemente connesse** con l'ambiente d'uso
+
+### Architettura REST
+1. Definire **risorsa** ogni concetto rilevante dell'applicazione Web
+2. Associagli un **URI** come **identificatore**
+3. Usare i **verbi HTTP** per esprimere ogni **operazione** secondo il modello **CRUD** (PUT, GET, POST, DELETE)
+4. Esprimere in maniera *parametrica* ogni rappresentazione dello **stato interno** della risorsa
+
+Nelle applicazioni non REST (applicazioni SOAP) esiste un intermediario di messaggi <br>
+La richiesta è indirizzata a questo intermediario e contiene nel body tutte le informazioni per soddisfarla, HTTP usato solo per trasferire informazioni
+
+L'archiettura REST si basa sui tre pressuposti del Web:
+1. Ogni *entità* definita come *risorsa*. L'URI è il suo identificatore (**nome**)
+2. Ogni *interazione* è esprimibile con un *metodo HTTP* (**verbo**)
+3. Ciò che viene scambiato è una *rappresentazione di uno stato* della risorsa (**formato**)
+
+REST infatti *non è un nuovo protocollo*, ma un modo di di sfruttare a pieno HTTP
+
+### Esempio
+Crea Cliente
+
+    PUT clients/1234 HTTP/1.1
+    Host: http://www.sito.com:80
+    Content-Type: text/xml; charset=utf-8
+    Content-length: 474
+  
+    <client xmlns:m="http://www.myApp.com/">
+        <nome>Rossi S.p.A.</nome>
+        <tel>051 654321</tel>
+        <citta>Bologna</citta>
+    </client>
+
+Aggiorna Cliente
+
+    PUT clients/1234 HTTP/1.1
+    Host: http://www.sito.com:80
+    Content-Type:application/json; charset=utf-8
+    Content-length: 474
+    
+    {
+        "nome": "Rossi S.p.A.",
+        "tel" : "051 654321",
+        "citta" : "Bologna"
+    }
+
+### Organizzazione risorse REST
+
+REST identifica due concetti fondamentali: **individui** e **collezioni**
+- Fornisce un URI ad entrambi
+- Ogni operazione avviene su uno solo di questi concetti
+- Su entrambi posso eseguire operazioni CRUD
+
+È consigliabile strutturare gli URI in modo gerarchico
+
+Esempio
+- `/clients/` -> tutti i clienti
+- `/clients/1234/` -> il cliente 1234
+- `/clients/1234/orders/` -> tutti gli ordini del cliente 1234
+
+Linee Guida:
+- Collezioni -> nome plurale, in fondo /
+  - Es. `/customers/123/`, tutte le sottorisorse del cliente 123
+- Individui -> nome singolare, in fondo niente /
+  - Es. `/customers/123`, solo il cliente 123
+
+Un filtro genera un sottoinsieme specificato attraverso una regola di qualche tipo
+- Esempio: `/customers/?tel=0511234567` -> collezione di clienti con tel 0511234567
+
+Nota: `POST /customers/` genera un cliente nuovo senza poter scegliere l'id, per farlo bisogna usare `PUT /customers/123`
+
+### Versionamento API
+REST non ha uno standard, si può inserire nell'URI, ma viola l'idea di identificare una singola risorsa con un URI<br>
+Questo è il sistema più semplice e intuitivo, ma gli URI si "sporcano"
+- `http://api.miosito.com/v1/clients/1234`
+
+L'alternativa è usare gli header HTTP `Accept` e i meccanismi di *content negotiation* per specificare la versione di API supportata.<br>
+Così gli URI sono più puliti ma la complessità aumenta:
+- `Accept: application/vnd.example.v1+json`
+- `Accept: application/vnd.example+json;version=1.0`
+
+# OpenAPI
+Per documentare una API è necessario definire:
+- **end-point** (URI/route) che supporta
+- **metodi** HTTP di accesso
+- **rappresentazioni** di **Input/Output**
+- **condizioni di errore** e mesaggi relativi
+
+## Swagger
+Ecosistema di tool per creazione, documentazione e accesso ad API soprattutto REST
+
+Può essere serializzato in JSON o YAML, è lo standard industriale per API REST
+
+## YAML
+**Ain't a Markup Language**, linearizzazione di strutture dati con sintassi ispirata a Python
+
+È più leggibile di JSON, ma i principi base sono uguali
+
+## Esempio di OpenAPI
+    swagger: "2.0"
+    info:
+        description: "This is a ..."
+        version: "1.0.6"
+        title: "Swagger Petstore"
+        termsOfService: "http://swagger.io/terms"
+        license:
+            name: "Apache 2.0"
+            url: "http://www.apache.org/licenses/LICENSE
+    host: "petstore.swagger.io"
+    basePath: "/v2"     ## Utile per le versioni
+    tags:
+        ...
+    schemes:
+    - "https"
+    - "http"
+    paths:              ## End-point (operazioni)
+        ...
+    
+    securityDefinitions:
+        ...
+    
+    definitions:        ## Definizioni risorse
+        ...
+
+## Sezione `paths`
+Descrive i percorsi (URL) corrispondenti alle operazioni possibili sull'API
+- Struttura: `<host>/<basePath>/<path>`
+
+Per ogni `path` ci sono tante sottosezioni quante sono le operazioni, per ognuna:
+- Informazioni generali
+- Paramentri di input/output
+
+### Esempio
+    /pet/{petId}:
+        get:
+            summary: "Find pet by ID"
+            description: "Returns a single pet"
+            operationId: "getPedById"
+            produces:
+            - "application/xml"
+            - "application/json"
+            parameters:
+                ...
+            responses:
+                ...
+        post:
+            summary: "Updates a pet in the store with form"
+            description: ""
+            operationId: "updatePetWithForm"
+            consumes:
+            - "application/x-www-form-urlencoded"
+            produces:
+            - "application/xml"
+            - "application/json"
+            parameters:
+                ...
+            responses:
+                ...
+
+## Paramentri di input
+Descritti nella sezione `parameters` che definisce una *lista* di paramentri, ognuno con:
+- tipo del parametro
+  - keyword `in`, può assumere valori `path`, `query` o `body`
+- nome (`name`) e descrizione (`description`)
+- se è obbligatorio (`required`)
+- formato dei valori che il dato può assumere (`type` o `schema`)
+
+I tipi in input e output possono essere di vario tipo
+- Primitivi: interi, stringhe, date, booleani
+- Oggetto (nel body)
+- Array di oggetti o dati primitivi
+
+### Esempio `path` e `query`
+    /pet/{petId}:
+        get:
+            summary: Find pet by ID
+            description: Returns a single pet
+            operationId: getPedById
+            parameters:
+                - name: petId       ## Quello nell'URI
+                  in: path
+                  description: ID of pet to return
+                  required: true
+                  type: integer
+                  format: int64
+
+    /pet/:
+        get:
+            summary: Find pet by status
+            operationId: findPetsByStatus
+            parameters:
+                - name: status       ## Quello nella query dell'URI
+                  in: query
+                  description: Status values that need to be considered for filter
+                  required: true
+                  type: array
+                  items:
+                      type: string
+
+### Esempio `body`
+    /user/{username}:
+        put:
+            tags:
+                - user
+            summary: Updated user
+            description: This can only be done by the logged in user.
+            operationId: updateUser
+            parameters:
+                - name: username
+                  in: path            ## Parametro nel path
+                  description: name that need to be updated
+                  required: true
+                  type: string
+                - in: body
+                  name: body          ## Oggetto <User> nel body
+                  description: Updated user object
+                  required: true
+                  schema:
+                      $ref: '#/definitions/User'
+
+## Oggetti e definizioni
+Il body contiene un oggetto di tipo `User`, viene passata l'intera risorsa come parametro
+
+La sezione `definitions` permette di definire i tipi degli oggetti, le loro proprietà e possibili valori
+
+Possono essere referenziati sia nelle richieste che nelle risposte (con `schema -> $ref`)
+
+### Esempio
+    User:
+        type: object
+        proprerties:
+            id:
+                type: integer
+                format: int64
+            username:
+                type: string
+            firstName:
+                type: string
+            lastName:
+                type: string
+            emale:
+                type: string
+            password:
+                type: string
+            phone:
+                type: string
+            userStatus:
+                type: integer
+                format: int32
+                description: User Status
+
+## Output
+Definiti attraverso `responses`
+
+Ogni risposta ha un id numerico unico, associato al codice HTTP corrispondente
+- 200 nessun errore
+- 4xx vari errori relativi
+
+### Esempio
+    /pet/:
+        get:
+            summary: Find pet by status
+            operationId: findPetsByStatus
+            parameters:
+                - name: status
+                  in: query
+                  description: Status values that need to be considered for filter
+                  required: true
+                  type: array
+                  items:
+                      type: string
+            responses:
+                '200':
+                    description: Successful operation
+                    schema:
+                        type: array
+                        items:
+                            $ref: '#/definitions/Pet'
+                '400':
+                    description: Invalid status value
+
+# Markup
+Ogni mezzo per rendere esplicita una certa interpretazione del testo
+
+Esempio, aggiunte al testo scritto che permettono di renderlo più fruibile. Come puteggiatura, spaziatura, ecc.
+
+## Introduzione e modi di Markup
+...
+
+## Componenti del markup
+### Elementi
+Parti del documento dotate di un senso proprio
+Individuato da un tag iniziale, il contenuto e il tag finale
+- `<titolo>Tre uomini e una barca</titolo>`
+
+### Attributi
+Informazioni aggiuntive all'interno del tag
+- `<racconto tipo="romanzo"> ... </racconto>`
+
+### Entità
+Frammenti di documento memorizzati separatamente e richiamabili all'interno del documento
+- `&egrave;`
+
+### #PCDATA
+Parsed Character DATA, rappresenta il contenuto vero e proprio del documento
+
+### Commenti
+Testo ignorato in fase di parsing
+- `<!-- Questo testo è ignorato dal parser -->`
+
+### Processing Instructions
+Elementi particolari per dare specifiche ulteriori su come gestire il documento XML nel caso specifico
+- `<?newpage?>`
+
+## XML
+Extended Markup Language, è un formato di Markup
+
+Distingue i documenti **validi** dai documenti **ben formati**
+
+# HTML
+HyperText Markup Language, la versione attuale è la 5
+
+## Struttura
+```
+<!DOCTYPE html>
+  <html>
+    <head>
+      <title>Document title</title>
+    </head>
+    <body>
+      <p>Text of a paragraph</p>
+    </body>
+  </html>
+```
+
+`<!DOCTYPE html>`: segnala il tipo di markup usato nel suo documento e la sea versione
+
+## Elementi *inline*
+Non spezzano il blocco (non vanno a capo) e si includono liberamente uno dentro l'altro
+
+Si dividono in elementi *fontstyle* e *phrase*. Oggi si consiglia l'uso di CSS. Esempi:
+- TT - TeleType, font monospace
+- I - corsivo
+- B - grassetto
+- U - sottolineato (deprecato)
+- S e STRIKE - testo barrato (deprecato)
+- BIG o SMALL - testo più grande o più piccolo
+- ecc
+
+## Elementi di blocco
+Definiscono l'esistenza di blocchi di testo che contengono elementi *inline*
+
+Elementi fondamentali
+- `<p>`: paragrafo
+- `<div>`: blocco generico
+- `<pre>`: blocco preformattato
+- `<address>`: l'autore della pagina
+- `<blockquote>`: citazione lunga
+
+Blocchi con ruolo strutturale
+- `<h1>`, `<h2>`, ..., `<h6>`: header
+
+## Elementi di lista
+Liste di elementi omogenei:
+- `<ul>`: Unordered List
+  - Lista non ordinata di elementi `<li>` (list item)
+- `<ol>`: Ordered List
+  - Lista ordinata di elementi `<li>`
+- `<dl>`: Definitions List
+  - Lista di elementi `<dt>` (definition term) e `<dd>` (definition data)
+
+## Elementi generici
+`<div>` e `<span>` sono cosiddetti elementi generici, privi di caratteristiche predefinite.
+
+`<div>` per gli elementi blocco, `<span>` per gli elementi inline
+
+## Effetti grafici
+`<hr>` horizontal rule
+`<br>` break (line)
+
+## Elementi di struttura
+`<main>` la parte principale della pagina. Al suo interno troviamo:
+- `<section>`, un contenitore generico
+- `<article>`, una parte del documento *self-contained*
+
+`<aside>`, una sezione collegata al testo ma separata dal flusso principale
+
+`<header>` e `<footer>`, elementi iniziali e finali di un documento
+- `<header>` contiene l'intestazione della sezione corrente o dell'intera pagina
+  - Solitamente usato pe rtabelle di contenuti, indici, form, ecc.
+- `<footer>` contiene la parte conclusiva
+  - Usato per mostrare informazioni sugli autori della pagina, copyright, licenze, ecc.
+
+`<nav>`, liste di navigazione
+- Nota, molto utile per l'accessibilità
+
+## Link ipertestuali (anchors)
+Definiti con elementi `<a>`, sintatticamente elementi *inline* (Ma non possono annidarsi a vicenda)
+
+Attributi:
+- `href`: specifica l'URI di destinazione
+- `name`: specifica un nome che può essere usato come ancora di destinazione di un link
+
+## Immagini
+Definite da `<img>`. Elemento vuoto, definito completamente dai suoi attributi:
+- `src` (required): URL della risorsa
+- `alt`: testo alternativo
+- `name`: un nome per riferirsi all'immagine
+- `width`: forza la larghezza in pixel
+- `height`: forza l'altezza in pixel
+
+`<figure>` contiene una `<img>` e un `<figcaption>`
+
+## Tabelle
+Vengono specificate **riga per riga** da `<table>`, `<tr>` (table row), `<th>` (table header) e `<td>` (table data)
+
+Gli attributi `colspan` e `rowspan` permettono di occupare più celle (terribili per l'accessibilità)
+
+## Form
+Legate ad applicazioni server-side. Vengono inviati tramite una connessione HTTP
+- `<form>`: contenitore del form
+  <br>Attributi:
+  - `method`: metodo HTTP da usare
+  - `action`: URI dell'applicazione server-side da chiamare
+- `<input>`, `<select>`, `<textarea>`: widget del form
+  <br>Attributi:
+  - `name`: nome legato all'applicazione server-side
+  - `type`: tipo di widget (input, checkbox, radio, submit, cancel, etc.)
+- `<button>`: un bottone cliccabile
+- `<label>`: parte visibile del widget
+
+Nota: per `input` ci sono due attributi per il focus
+- `placeholder`: contiene una stringa di visualizzata in trasparenza nel campo
+- `autofocus`: indica il campo sul quale posizionare il focus al caricamento del form
+- `email`: verifica (il browser) che ci sia una mail
+- `url`: verifica che ci sia un URL
+- `number`: bottoni per aumentare o diminuire il numero
+- `range`: slider per incrementare un numero, specificando max e min
+- `date`: visualizzazione di un calendario
+- e altri
+
+È permesso *validare* il form client-side (è il default)
+
+Possibile indicare i campi obbligatori, tramite l'attributo `required` nell'oggetto `input`
+
+## Attributi globali (coreattrs)
+- **Id**: un identificativo unico
+- **Style**: breve stile CSS associato al singolo elemento
+- **Class**: una lista di nomi di classe per CSS
+- **Title**: testo secondario associato all'elemento
+
+### Attributi i18n (internationalization) e di eventi
+- **Lang**: codifica dei linguaggi umani
+- **Dir**: direzione da cui leggere il testo, `ltr` (left-to-right) o `rtl` (right-to-left)
+- **Onclick**, **ondoubleclick**, **onmouseover**, **onkeypress**, ecc.
+
+## Colori
+Gestiti con **codice hash** RGB o con nome esplicito
+
+## Tipi di dati: le lunghezze
+HTML usa diversi modi per gestire le lunghezze:
+- **Pixel**: dimensione in putni di schermo, è un numero assoluto
+- **Percentuali**: dimensione in proporzione rispetto alla dimensione del contenitore
+- **Multi-lunghezze**: sequenza di valori di lunghezza, si usa per esempio nei gruppi di colonne in una tabella
+
+## Tag di `<head>`
+- `<title>`: titolo del documento
+- `<link>`: link di documenti a tutto il documento
+- `<script>`: librerie di script
+- `<style>`: librerie di stili
+- `<meta>`: meta-informazioni sul documento
+- `<base>`: URL da usare come base per gli URL relativi
