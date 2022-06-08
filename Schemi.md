@@ -1159,3 +1159,49 @@ Solo per HTML (non in generale):
 - `outerHTML` legge/scrive il contenuto di un elemento, quindi *include* il tag
 
 # CSS e tipografia
+    Lunga introduzione
+
+## Tipometria
+Unità assolute:
+- Point (`pt`): definito come 1/72 di un pollice, 0.35 o 0.37 mm
+- Millimetri (`mm`)
+- Inch (`in`): 1 pollice = 25.4 mm
+
+Unità relative:
+- `Em`: la dimensione del carattere attuale
+  - Deriva dalla larghezza del blocco con cui veniva stampata la M
+  - Se la dimensione corrente è `12pt` allora `1em = 12pt`
+- `En`: metà di 1 `em`
+- `Ex`: l'altezza di una x minuscola
+
+## RGB
+Spazio colore additivo basato sull'identifcazione di Rosso, Verde e Blu come colori primari
+
+### RGBa
+Derivato da RGB, aggiunta del *canale alpha* per l'opacità
+
+## Cascading Style Sheet (CSS)
+Foglio di stile **a cascata**
+
+Nei documenti HTML l'uso di stili CSS può usato in tre modi
+- direttamente dentro al tag di riferimento
+- dentro al tag `<style>`
+- indicato un foglio a parte dentro a `<link>`
+
+Per indicare gli elementi si usa:
+- Il nome dell'elemento (`body`, `h1`, ecc)
+- La classe, con `.nomeClasse`
+- L'id, con `#idElemento`
+
+Gli elementi vengono presi a cascata, l'ultimo sovrappone tutti gli altri (con delle eccezioni)
+
+La proprietà è una caratteristica di stile assegnabile ad un elemento<br>
+Esempio: `color`, `font-family`, `margin`, ecc
+
+Uno statement è indicazione di una proprietà CSS. Ha la sintassi `proprietà: valore;`
+```
+color: blue;
+font-family: "Times New Roman";
+margin: 0px;
+```
+
