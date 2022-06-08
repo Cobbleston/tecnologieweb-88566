@@ -1029,8 +1029,133 @@ HTML usa diversi modi per gestire le lunghezze:
 
 ## Tag di `<head>`
 - `<title>`: titolo del documento
+  - Contiene del semplice testo, ha tre scopi: appare come titolo della finestra, nome per un eventuale bookmark e per i motori di ricerca
 - `<link>`: link di documenti a tutto il documento
+  - Si utilizza per collegare altri documenti al documento principale (vedi `script` e `style`)
 - `<script>`: librerie di script
 - `<style>`: librerie di stili
 - `<meta>`: meta-informazioni sul documento
+  - Codifica dei caratteri utilizzata (`<meta charset="utf-8">`)
+  - Intestazioni HTTP (`<meta http-equiv="expires" content="Sat, 23 Mar 2019 14::25:27 GMT">`)
+  - Altre informazioni per il motore di ricerca
 - `<base>`: URL da usare come base per gli URL relativi
+  - Inserimento di un URL relativo, che si basa sull'URL del documento di partenza
+
+## `<object>`: embedded content
+Elementi come `<canvas>`, `<audio>`, `<video>`, `<math>`, ecc
+
+### Canvas
+`<canvas>` fornisce un'area rettangolare in cui disegnare immagini bidimensionali e modificarle in relazione ad eventi, con javascript
+
+Esempio:
+```
+function draw() {
+  var canvas = document.getElementById('c1');
+  if (canvas.getContext) {
+    var ctx = canvas.getContext('2d');
+    ctx.fillStyle = "rgb(255, 0, 0)"
+    ctx.fillRect (20, 20, 65, 60);
+    ctx.strokeStyle = "rgb(0, 100, 20)";
+    ctx.strokeRect (40, 40, 65, 60);
+  }
+}
+
+<canvas id=”c1" onLoad="draw();" width="175" height="175">
+</canvas>
+```
+
+### Video e audio
+HTML5 permette di includere video e audio in una pagina
+
+`<video>` specifica un meccanismo generico per il caricamento di *file* e *stream* video <br>
+`<audio>` funziona uguale
+
+Esempio:
+```
+<video width="400px" controls autoplay>
+  <source src="video.mp4" type="video/mp4" codecs="avc1.42E01E, mp4a.40.2">
+  <source src='video.ogv' type='video/ogg" codecs="theora, vorbis">
+  <track kind="subtitles" src="video.en.vtt" srclang="en" label="English">
+  <track kind="subtitles" src="video.it.vtt" srclang="it" label=”Italian">
+</video>
+```
+
+## Il Document Object Model (DOM)
+Il parsing di HTML5 è complesso, può essere fatto anche per documenti mal formati, ma i vari browser lo facevano in modo diverso
+
+Nasce quindi una struttura chiamata Document Object Model (DOM) a cui sia possibile arrivare a partire dalla stringa HTML e da cui sia possibile estrarne un'altra successivamente
+
+Il DOM è un'**interfaccia di programmazione** (API) per documenti HTML e XML
+
+Definisce la struttura logica del documento con una struttura ad albero. Esempio:
+
+<img src="StrutturaDOM.png" alt="Struttura DOM">
+
+### Oggetti del DOM
+La classe principale è *DOMNode*, di cui la maggior parte delle altre classi ne sono sottoclasse (ce ne altri):
+- DOMDocument: l'intero documento
+- DOMElement: uno o più elementi singoli
+- DOMAttr: ogni singolo attributo del documento
+- DOMText: ogni singolo nodo di testo del documento
+
+#### **DOM Node**
+Specifica i metodi per accedere a tutti gli elementi di un nodo di un documento
+
+Membri:
+- `nodeName` - *uppercase string*
+- `nodeType` - *number*
+- `childern` - *array*
+- `childNodes` - *array*
+- `parentNode` - *elementNode*
+- `attributes` - *array*
+
+Metodi:
+- `insertBefore()`
+- `replaceChild()`
+- `removeChild()`
+- `appendChild()`
+- `hasChildNodes()`
+- `hasAttributes()`
+
+#### **DOM Document**
+Equivalente alla radice dell'albero (non all'elemento radice)
+
+Membri:
+- `docType`
+- `documentElement`
+
+Metodi
+- `createElement()`
+- `createAttribute()`
+- `createTextNode()`
+- `getElementsByTagName()`
+- `getElementById()`
+
+#### **DOM Element**
+Accede a qualunque elemento del documento
+
+Membri:
+- `nodeName`
+
+Metodi:
+- `getAttribute()`
+- `setAttribute()`
+- `removeAttribute()`
+
+E analogamente per le altre classi ed interfaccia del DOM
+
+### Selettori in DOM
+Per accedere ai nodi i metodi standard sono:
+- `getElementById`: id univoco
+- `getElementsByName`: attributo nome
+- `getElementsByTagName`: ricerca con tag (`div`, `h1`, ecc)
+- `getElementsByClassName`: ricerca tramite classe
+- `querySelector`: accetta selettore CSS e restituisce il primo elemento che trova
+- `querySelectorAll`: come prima ma restituisce tutti gli elementi trovati
+
+### `innerHTML` e `outerHTML`
+Solo per HTML (non in generale):
+- `innerHTML` legge/scrive il contenuto di un sottoalbero, quindi *esclude* il tag
+- `outerHTML` legge/scrive il contenuto di un elemento, quindi *include* il tag
+
+# CSS e tipografia
