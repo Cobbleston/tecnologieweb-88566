@@ -1205,3 +1205,298 @@ font-family: "Times New Roman";
 margin: 0px;
 ```
 
+Un *selettore* permette di specificare un elemento o una classe di elementi dell'albero HTML
+
+Una *regola* è un blocco di statemente associati ad un elemento attraverso l'uso di un selettore
+
+Regola:
+
+    selettore {
+      statement; statement; ...
+    }
+
+    h1 {
+      color:white;
+      background-color: black;
+    }
+
+pattern | significato | esempio
+:---: | :---: | :---:
+`*` | qualunque elemento | `*`
+`E` | un elemento di tipo `E` | `h1`
+`E.Nomeclasse`<br>`.nomeclasse` | un elemento (di tipo `E` e) di classe `nomeclasse` | `p.codice`<br>`.codice`
+`E#id`<br>`#id` | un elemento (di tipo `E` e) con id `id` | `tr#abc1`<br>`#abc1`
+
+## Tipi di dato
+
+Tipo | Esempio
+:---: | :---:
+Interi e floating | `2`, `3.4`
+URI | `url(http://www.site.com)`
+Stringa | `"My name si \"Fabio\""`
+cm, mm, in | `2cm`, `4mm`, `3in`
+pixel | `1px`
+Larghezza della M del contenitore | `2 em`
+Larghezza della M della pagina | `3 rem`
+Percentuale | `10%`
+Colore HTML | `#12a430`
+Colore rgb | `rgb(x, y, z)`
+Colore rgba | `rgba(x, y, z, o)`
+
+## Proprietà
+Ogni elemento è presentato da una scatola che ne contiene il contenuto
+
+### `display`
+- Flusso *blocco*: come paragrafi
+- Flusso *inline*: come parola della stessa riga
+- Flusso *float*: spostate all'estrema sinistra o destra la scatola, le altre ci girano intorno
+
+Gli elementi HTML hanno un valore di default per la proprietà `display`, la specifichiamo solo se vogliamo cambiarla
+
+### Elementi della scatola
+- **Margin**: regione che separa una scatola dalle altre (trasparente)
+- **Border**: regione dove visualizzare il bordo della scatola
+- **Padding**: regione di respiro tra bordo e contenuto (trasparente)
+- **Content**: regione dove sta il contenuto
+
+### Proprietà tipografiche
+- `font-size`: lunghezza o percentuale
+- `font-family`: lista di font names separati da virgole, l'ordine esprime preferenza
+- `font-weight`: normal | bold | 100 | ... | 900
+- `font-style`: normal | italic | oblique
+- `font-variant`: normal | small-caps
+- `text-decoration`: none | underline | overline | line-through
+- `text-indent`: length
+- `text-align`: left | center | right | justified
+- `line-height`: length
+- `text-align-last`: left | center | right | justified
+- `text-transform`: capitalize | uppercase | lowercase | none
+- `text-shadow`: h-distance v-distance color
+- `font-stretch`: normal | wider | narrower
+- `font-kerning`: normal | none
+- `letter-spacing` and word-spacing: length
+- `white-space`: normal | pre | nowrap
+ 
+### Proprietà della scatola
+- `padding`: length
+- `margin`: length
+- `color`: color
+- `background-color`: color
+- `border`: length type color
+- `box-shadow`: h-distance v-distance color
+
+In molti casi però si possono abbreviare molteplici valori di una proprietà con un'unico statement:
+
+    p {
+      margin: 1em 2em 3em 4em;
+    }
+
+    is equal to
+
+    p {
+      margin-top: 1em;
+      margin-right: 2em;
+      margin-bottom: 3em;
+      margin-left: 4em;
+    }
+
+
+## Page Layout
+La disposizione armoniosa degli elementi visuali sulla pagina
+
+### Orientamento
+Due possibilità, non sempre fisse:
+- **portrait**
+- **landscape**
+
+### Aspect ratio
+Il rapporto tra altezza e larghezza delle pagine o dello schermo. Alcuni esempi:
+- Quadrato (1.0000)
+- 4/3 (1.3333)
+- 19/9 (1.7777)
+
+### Risoluzione
+Densità degli elementi visuali in una unità di area. Noi parliamo di *dots per inches* (DPI) in stampa e *pixel per inches* (PPI) per gli schermi
+
+## Altri selettori
+### Pseudo Elementi
+- `E::first-line`, indica la prima riga
+- `E::first-letter`, indica la prima lettera formattata di E
+- `E::before`, contenuto generato prima di E
+- `E::after`, contenuto generato dopo di E
+
+### Prossimità
+- `E F`, elemento F discentende di E
+- `E > F`, elemento F figlio di E
+- `E + F`, elemento F successivo diretto di un elemento E
+- `E ~ F`, elemento F successivo di E
+
+### Attributi
+- `E[foo]`, elemento E con un attributo foo
+- `E[foo="bar"]`, elemento E con un attributo foo con valore uguale a "bar"
+- `E[foo~="bar"]`, elemento E con attributo foo con valore che contiene "bar"
+- `E[foo^="bar"]`, elemento E con attributo foo con valore che inizia per "bar"
+
+### Pseudo Classi
+- `E:active`, elemento E quando è attivato dall'utente (Es. Click)
+- `E:hover`, elemento E ha puntatore sopra
+- `E:enabled`, elemento E di interfaccia quando è abilitato
+- `E:checked`, elemento E quando è "checked"
+
+### Pseudo Classi strutturali
+- `E:first-child`, elemento che è il primo figlio
+- `E:nth-child(n)`, n-esimo elemento
+- `E:nth-last-child(n)`, n-esimo figlio a partire dall'ultimo
+- `E:nth-of-type(n)`, pari/dispari (utile per tabelle)
+
+## Proprietà
+### Canvas e viewport
+L'area virtuale degli elementi del DOM via CSS è detta **canvas**
+
+Il **viewport** è la parte visibile attraverso lo schermo
+
+### Unità di misura su canvas e viewport
+- Viewport width (vw): 1% della attuale larghezza del viewport
+- Viewport height (vh): 1% della attuale altezza del viewport
+- vmin: il più piccolo tra vw e vh
+- vmax: il più grande tra vw e vh
+
+### Unità flex (fr)
+Lunghezza flessibile, dimensione con unità fr che rappresenta una frazione dello spazio *rimasto* del contenitore
+
+### Posizione della scatola
+Diversi tipi di posizionamento:
+- Statico (default)
+- Assoluto: indipendente dal flusso
+- Relativo: scatola spostata di un delta rispetto alla sua posizione naturale
+- Fisso: posta in una posizione assouta, anche scrollando non si muove
+- Sticky: Posizione naturale, ma con scrolling rimane in vista
+
+Inoltre:
+- `position`: `static` | `relative` | absolute | fixed
+  - Gestisce il posizionamento
+- `float`: `left` | `right` | `none`
+  - Scatola scivolata all'estrema dx o sx muovendo le altre
+- `top`, `bottom`, `left`, `right`: coordinate della scatola
+- `width`, `height`: dimensioni usabili invede di `right` e `bottom`
+- `z-index`: posizione nella pila di scatole potenzialmente sovrapposte, il valore è un numero *intero*
+- `overflow`: specifica come trattare il contenuto che non sta interamente nella scatola
+  - `visible`: la scatola si espande per contenere il contenuto
+  - `hidden`: il contenuto extra viene nascosto
+  - `scroll`: il contenuto viene reso scrollabile
+
+## Layout
+La proprietà `display` gestisce la natura dellascatola rispetto al contesto e al contenuto
+
+Per nascondere un elemento possiamo usare `display: none;`, per far sparire la scatola esterna e mostrare quella interna invece `display: contents;`
+
+Esistono layout complessi, con `grid` e `flex`
+
+### No layout
+Tutto organizzato in blocchi uno sopra l'altro
+
+### Tabelle HTML
+***DA NON USARE MAI***
+
+Visivamente funziona, ma per l'accessibilità è terribile
+
+### Float
+Gli oggetti con float possono muoversi liberamente, ma ho solo tre scatole possibili, `left`, `center` e `right`
+
+### Positioning
+Possiamo posizionare gli oggetti manualmente con `position: absolute`
+
+### Tabelle CSS
+Usiamo delle tabelle css, molto complicato da gestire
+
+### Grid
+Con `display: grid;` assegnamo ad un elemento un'organizzazione visuale a griglia, organizzata per irghe e colonne di altezza e larghezza controllabili
+
+Gestito con `grid-template-rows`, `grid-template-columns`, `grid-template-areas`
+
+Posso avere dello spazio tra le aree con `gap` e gestire quali righe e quali colonne occupa un elemento con `grid-row`, `grid-column` e `grid-area`
+
+### Flexbox
+Con `display: flex;` organizzaimo visivamente a contenuti flessibili che si distribuiscono armoniosamente nello spazio disponibile
+
+L'elemento con questa regola impone che i figli siano:
+- organizzati per righe o colonne, `flex-direction`
+- disposti su più righe o colonne separate o su una sola, `flex-wrap`
+- disposti fianco a fianco oppure distribuiti per occupare tutto lo spazio, `justify-content`
+
+Ogni figlio dell'elemento flex può
+- espandersi o restringersi, `flex-shrink` e `flex-grow`
+- cambiare posizione rispetto al documento, `order`
+
+## Altri aspetti di CSS
+### Ereditarietà
+I valori vengono ereditati, a parte la proprietà `display` e `backgound`
+
+È possibile usando `!important` dopo uno statemente tenere quella proprietà anche se venisse sovrascritta successivamente
+
+L'ordine di precedenza della cascata è
+1. user agent
+2. utente
+3. autore
+4. importanti dell'autore
+5. importanti dell'utente
+
+### Trasformazioni CSS
+Possiamo trasformare una scatola già generata con `trasfrom: function(parameters);`. Alcuni esempi di funzioni:
+- translate(), translate3d(): sposta la scatola
+- scale(), scale3d(): allarga/rimpicciolisce la scatola
+- rotate(), rotate3d(): ruota la scatola
+- skew(): inclina la scatola
+
+### At rules (@)
+Regole precedute da `@`, servono a specificare ambiti o meta-regole:
+- `@import`: permette di importare regole da altri stili
+- `@charset`: serve per specificare l’encoding (es: UTF-8)
+- `@namespace`: permette di definire namespace all’interno di un CSS ed usarli nei selettori
+- `@page`: serve per definire caratteristiche di margine dell’intera pagina
+- `@font-face`: permette di specificare i font "customizzati" da utilizzare (vengono scaricati automaticamente)
+- `@media`: descrive il media-type di destinazione per cui un insieme di statement devono essere applicati
+  - Utile per le pagine responsive e variabili a seconda del device
+- `@keyframes`: descrive stati iniziali, intermedi e finali di un'animazione in CSS
+
+### Media queries
+Specificano particolari regola da applicare solo in alcuni casi
+```
+@media query {
+  selector {
+    statement:
+    statement:
+    ...
+  }
+}
+```
+Molte possibili regole, la più frequente è `max-width` per distinguere i vari dispositivi (mobile/tablet/desktop)
+
+### Animazioni
+`@keyframes` è un blocco di regole per specificare lo stato iniziale, lo stato finale ed eventuali stati intermedi
+
+### Variabili e calcoli
+`:root` è un selettore con scope globale che non viene mai sovrascritto, si può usare per avere variabili
+
+`var()` per accedere al valore di una custom property
+
+`calc()` per svolgere calcoli semplici
+
+## Twitter BootStrap
+Framework CSS, gestione responsive del layout, basato su scatole con divisori di 12
+
+Elementi per un sito web *responsive*:
+- Griglia fluida ed organizzata su quantità proporizionali alla dimensioni dello schermo
+- Immagini flessibili
+- Uso di `@media query`
+
+Bootstrap utilizza 4 classi di schermi predefiniti
+- `xs`: extra small, smartphone
+- `sm`: small, tablet
+- `md`: medium, laptop
+- `lg`: larghe, schermi full HD o superiori
+
+E utilizza classi predefinite `col-size-12esimi`
+
+Bootstrap fornisce anche un lungo elenco di servizi grafici, come navbar, finestre modali, ecc.
+
