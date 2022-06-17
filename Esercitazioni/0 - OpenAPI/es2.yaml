@@ -1,6 +1,6 @@
 swagger: "2.0"
 info:
-  title: "API piattaforma videgames"
+  title: "API piattaforma videogames"
   version: "1.0.0"
   description: "Piattaforma per VideoGames"
 

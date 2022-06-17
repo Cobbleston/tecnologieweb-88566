@@ -1,0 +1,46 @@
+nav {
+    background-color: lightgrey;
+}
+
+#gridContainer {
+    width: 100%;
+    display: grid;
+    grid-template-areas: "a1 a2 a3";
+    grid-template-columns: 1fr 1fr 1fr;
+}
+
+.gridElement {
+    background-color: lightblue;
+    margin: 1%;
+    text-align: center;
+}
+
+img {
+    padding-left: 5%;
+    padding-right: 5%;
+    padding-top: 5%;
+    width: 90%;
+}
+
+#article1 {
+    grid-area: a1;
+}
+
+#article2 {
+    grid-area: a2;
+}
+
+#article3 {
+    grid-area: a3;
+}
+
+.gridElement {
+    border: 3px solid;
+    border-color: black;
+}
+
+
+.gridElement:active {
+    border: 5px solid;
+    border-color: red;
+}
