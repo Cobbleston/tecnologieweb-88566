@@ -1,0 +1,84 @@
+#firstLine {
+    text-align: right;
+}
+
+nav {
+    display: flex;
+}
+
+.left {
+    float: left;
+}
+
+.right {
+    float: right;
+}
+
+#argomentiContainer {
+    display: flex;
+    flex-direction: column;
+}
+
+#argomentiContainer a {
+    color: white;
+    background-color: lightgray;
+    text-decoration: none;
+    margin: 1px;
+}
+
+#containerImage {
+    display: grid;
+    grid-template-areas: "a1 a1 a2 a3" "a1 a1 a4 a5";
+}
+
+#containerImage h2 {
+    background-color: rgba(228, 207, 207, 0.5);
+}
+
+#firstImage {
+    grid-area: a1;
+    background-image: url("trattore.jpg");
+    background-position: center;
+    background-size: cover;
+}
+
+#secondImage {
+    grid-area: a2;
+    background-image: url("trattore.jpg");
+    background-position: center;
+    background-size: cover;
+}
+
+#thirdImage {
+    grid-area: a3;
+    background-image: url("trattore.jpg");
+    background-position: center;
+    background-size: cover;
+}
+
+#fourthImage {
+    grid-area: a4;
+    background-image: url("trattore.jpg");
+    background-position: center;
+    background-size: cover;
+}
+
+#fifthImage {
+    grid-area: a5;
+    background-image: url("trattore.jpg");
+    background-position: center;
+    background-size: cover;
+}
+
+main {
+    display: grid;
+    grid-template-columns: 1fr 4fr;
+}
+
+#secondNav {
+    display: grid;
+    width: 100vw;
+    background-color: green;
+    color: white;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr ;
+}
