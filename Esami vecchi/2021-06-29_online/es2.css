@@ -34,11 +34,15 @@ img {
     grid-area: a3;
 }
 
-.gridElement {
+#gridContainer:not(hover) > .gridElement {
     border: 3px solid;
     border-color: black;
 }
 
+.gridElement:not(active) {
+    border: 5px solid;
+    border-color: blue;
+}
 
 .gridElement:active {
     border: 5px solid;
