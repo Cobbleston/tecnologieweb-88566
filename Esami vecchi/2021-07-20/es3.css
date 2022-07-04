@@ -1,0 +1,45 @@
+main {
+    display: grid;
+    grid-template-areas: "left center right";
+    grid-template-columns: 1fr 4fr 4fr;
+}
+
+#sideMenu {
+    grid-area: left;
+}
+
+#elencoPlaylist {
+    grid-area: center;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+}
+
+#elencoCanzoni {
+    grid-area: right;
+}
+
+.bloccoCanzone {
+    display: grid;
+    grid-template-rows: 1fr 2fr 2fr 2fr;
+    grid-template-areas: "durata nome artista album";
+}
+
+.durataBlock {
+    grid-area: durata;
+}
+
+.nomeBlock {
+    grid-area: nome;
+}
+
+.artistaBlock {
+    grid-area: artista;
+}
+
+.albumBlock {
+    grid-area: album;
+}
+
+button {
+    width: 100%;
+}
