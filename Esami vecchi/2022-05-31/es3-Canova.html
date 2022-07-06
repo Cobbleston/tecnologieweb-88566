@@ -1,0 +1,216 @@
+<!--
+    1. /work: l’elenco delle opere disponibili, ciascuna con i dati comuni a tutti i vinili della stesso disco, incluse le immagini, e il numero di copie disponibili per ognuna. I parametri dell’API permettono di selezionare opere per autore, per (parte del) titolo, per anno di uscita, per casa discografica.
+        API base per la ricerca di elementi nel negozio. Inserisco come query i parametri della ricerca nella forma:
+            - idOpera="abcdef"
+            - author="Pink Floyd"
+            - title="Dark Side of The Moon"
+            - yearStart="1950"
+            - yearEnd="1990"
+            - editor="Mondadori"
+            - condition="Nuovo"
+            - musicStyle="Rock"
+        Nel caso di risposta positiva restituisco un JSON con all'interno la lista di possibili opere cercate. All'interno del JSON per ogni opera inserisco i dati comuni a tutti i vinili (autore, titolo completo, anno di pubblicazione, casa discografica e stile musicale) e la lista dei singoli vinili disponibili
+        Aggiungo immagini di copertina e numero di copie rimaste per ogni vinile, l'oggetto restituito avra' la forma di una lista con ogni elemento strutturato cosi':
+            idOpera: "abcdef"
+            author: "Pink Floyd",
+            title: "Dark Side of The Moon",
+            year: "1980",
+            editor: "Mondadori",
+            style: "Rock",
+            vinylList: [
+                {id: "123", condition: "Nuovo", price: "8.99"}, {id: "124", condition: "Molto usato", price: "4.99"}
+            ];
+        
+            In caso errore chiedo semplicemente di effettuare nuovamente la richiesta
+
+            Esempio di richiesta:
+                GET /work?author="Pink Floyd", restituisco tutte le opere dei Pink Floyd
+
+    2. /vynil: l’elenco dei vinili disponibili per il disco specificato, con i dati specifici di ogni vinile incluse le immagini di dettaglio e il prezzo individuale.
+        In questo caso sfrutto work per cercare il singolo disco con una ricerca molto precisa, tramite idOpera, cosi' da ottenere come risposta solamente la singola Opera con l'elenco dei vinili disponibili.
+        All'interno di vinylList trovo le immagini di dettaglio (che ottengo con /getImage, spiegata in seguito come) e il prezzo.
+        
+        In caso di errore (non e' un errore se il negozio non possiede i vinili cercati, ma lo e' se l'opera non esiste) fornisco le informazioni necessarie a seconda del caso. In caso l'Opera non esista chiedero' di rifare la ricerca, nel caso l'Opera esista ma non ci siano vinili (quindi ad esempio 123 non esiste) chiedero' di scegliere tra i vinili disponibili
+
+        /getImage funziona prendendo l'id dell'Opera e del singolo vinile e facendo una richiesta del tipo GET /getImage/abcdef/123, che restituira' l'immagine del disco (o piu' immagini, per semplicita' una sola)
+            In caso di errore restituisco un'immagine di default per la pagina, specificando che l'immagine non e' disponibile
+
+        Esempio di richiesta:
+            GET /vinyl/abcdef, restituisco tutti i vinili disponibili del disco con id "abcdef"
+    
+    3. /cart: modifiche (inserimenti e rimozioni) dal carrello degli acquisti uno specifico vinile. Il carrello degli acquisti è gestito interamente server-side (perchè la disponiblità dei singoli vinili può cambiare in tempo reale tra un’operazione e l’altra). Ogni accesso a questa API restituirà sempre l’intero carrello degli acquisti aggiornato secondo le richieste appena compiute.
+        Dopo aver cercato con /work e /vynil inserisco nel carrello il vinile scelto con un'operazione di GET
+        Restuiro' in ogni caso (anche se ho scelto un vinile che non esiste o terminato) il carrello post richiesta in formato JSON
+        Esempio: GET /cart/abcdef/123
+
+            In caso di errore Not Found (404) restuisco l'errore e chiedo di fare una nuova richiesta
+
+        In caso voglia cancellare un elemento dal carrello uso l'operazione POST, mandando nel body le informazioni in JSON del vinile che avevo scelto
+        Esempio: POST /cart/abcdef/123
+
+            Qui faccio prima un controllo se ho effettivamente nel carrello quel vinile, e in caso contrario stampo un errore a schermo
+-->
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Hello world</title>
+    <link rel="stylesheet" href="https://www.fabiovitali.it/TW/lib/bootstrap.min.css">
+    <link rel="stylesheet" href="es3.css">
+    <link rel="javascript" href="es3.js">
+    <script src="https://www.fabiovitali.it/TW/lib/jquery-3.6.0.js"></script>
+    <script src="https://www.fabiovitali.it/TW/lib/bootstrap.js"></script>
+</head>
+
+<body>
+    <header>
+        <h1>Vinyl e-commerce</h1>
+    </header>
+
+    <form>
+        <input id="author" name="author" type="text" placeholder="Autore"><br>
+        <input id="title" name="title" type="text" placeholder="Titolo"><br>
+        <input id="yearStart" name="yearStart" type="text" placeholder="Anno inizio"><br>
+        <input id="yearEnd" name="yearEnd" type="text" placeholder="Anno fine"><br>
+        <input id="editor" name="editor" type="text" placeholder="Casa discografica"><br>
+        <input id="condition" name="condition" type="text" placeholder="Condizioni"><br>
+        <input id="style" name="style" type="text" placeholder="Stile Musicale"><br>
+        <input type="submit" value="Cerca">
+    </form>
+
+    <div id="elencoOpere">
+    </div>
+
+    <div id="elencoVinili">
+    </div>
+
+    <div id="carrello">
+    </div>
+</body>
+
+</html>
+
+
+<script>
+    function ricercaDischi(filters) {
+        fetch(
+            `https://www.site.com/work?${filters}`,
+            { method: "GET" }
+        )
+            .then((response) => {
+                if (!response.ok) throw new Error(`Errore HTTP ${response.status}.`);
+                return response.json();
+            })
+            .then((res) => {
+                popolaDischi(res);
+            })
+            .catch((error) => {
+                throw new Error(error);
+            });
+    }
+
+
+    function ricercaVinili(idDisco) {        
+        fetch(
+            `https://www.site.com/vynil/${idDisco}`,
+            { method: "GET" }
+        )
+            .then((response) => {
+                if (!response.ok) throw new Error(`Errore HTTP ${response.status}.`);
+                return response.json();
+            })
+            .then((res) => {
+                popolaVinili(res);
+            })
+            .catch((error) => {
+                throw new Error(error);
+            });
+    }
+
+    function popolaDischi(listaDischi) {
+        if (listaDischi) {
+            $("#elencoDischi").html = "";
+            for (let disco in listaDischi) {
+                $("#elencoDischi").html += `<div id="${disco[idOpera]}" class="containerOpera">
+                                                ${disco[author]}, ${disco[title]}, ${disco[year]}, ${disco[editor]}, ${disco[style]}<br>
+                                                Numero copie disponibili: ${disco[vinyl].length()}
+                                                <input type="submit" value="Cerca Vinili">
+                                            </div>`;
+                }
+        }
+    }
+
+    function popolaVinili(listaVinili) {
+        if (listaVinili) {
+            $("#elencoVinili").html = "";
+            for (let vinile in listaVinili) {
+                $("#elencoVinili").html += `<div id="${vinile[id]}" class="containerVinile">
+                    Condizioni: ${vinile[condition]}<br>
+                    Prezzo: ${vinile[price]} euro<br>
+                    Immagine:
+                    <img src=https://www.site.com/${vinile[pathImage]}
+                    <input type="submit" value="Aggiungi al carrello">
+                    </div>`;
+                }
+        }
+    }
+
+    function aggiungiAlCarrello(vinile) {
+        fetch(
+            `https://www.site.com/cart?${vinile[id]}`,
+            { method: "GET" }
+        )
+            .then((response) => {
+                if (!response.ok) throw new Error(`Errore HTTP ${response.status}.`);
+                return response.json();
+            })
+            .then((res) => {
+                $("#carrello").html = "";
+                for (let element in res) {
+                    $("#carrello").html += `<div>
+                        Condizioni: ${element[condition]}<br>
+                        Prezzo: ${element[price]} euro<br>
+                        <input type="submit" value="Rimuovi dal carrello">`;
+                    }
+            })
+            .catch((error) => {
+                throw new Error(error);
+            });
+    }
+
+function RimuoviDalCarrello(vinile) {
+    let carrello;
+    fetch(
+        `https://www.site.com/cart`,    // Restituisce il JSON con all'interno tutti i vinili del carrello
+        { method: "GET" }
+    )
+        .then(res => {
+            carrello = JSON.parse(res);
+        });
+    // Controllo di avere il vinile nel carrello
+    if (vinile in carrello) {
+        fetch(
+            `https://www.site.com/cart?${vinile[id]}`,
+            { method: "POST" }
+            )
+            .then((response) => {
+                if (!response.ok) throw new Error(`Errore HTTP ${response.status}.`);
+                return response.json();
+            })
+            .then((res) => {
+                $("#carrello").html = "";
+                for (let element in res) {
+                    $("#carrello").html += `<div>
+                        Condizioni: ${element[condition]}<br>
+                        Prezzo: ${element[price]} euro<br>
+                        <input type="submit" value="Rimuovi dal carrello">`;
+                    }
+            })
+            .catch((error) => {
+                throw new Error(error);
+            });
+        }
+}
+</script>

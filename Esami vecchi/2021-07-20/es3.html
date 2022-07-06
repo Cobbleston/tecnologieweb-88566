@@ -17,28 +17,39 @@
     </header>
 
     <main>
+        <!--
+            In aggiunta:
+            - Finestra modale per i filtri
+            - Finestra modale per playlist
+
+            Nota: la funzione selezionaPlaylist() e aggiungiBrano() prendono l'ultimo elemento cliccato, e con CSS il blocco cliccato avra' un bordo rosso
+        -->
+
         <div id="sideMenu">
-                <button>Vedi tutte le canzoni disponibili</button><br>
-                <button>Filtra</button><br>
-                <button>Seleziona la playlist</button><br>
-                <button>Visualizza dettagli playlist</button><br>
-                <button>Accoda brano selezionato</button><br>
+                <button onclick="updateBrani()">Vedi tutte le canzoni disponibili</button><br>
+                <form>
+                    <input type="text" name="searchValue" placeholder="Nome">
+                    <button onclick="showFilteredSongs()">Filtra</button>
+                </form><br>
+                <button onclick="showDetailsPlaylistWindow()">Visualizza dettagli playlist</button><br>
         </div>
             <div id="elencoPlaylist">
-                <div class="bloccoPlaylist">Cubo di Rubik</div>
-                <div class="bloccoPlaylist">Cubo di Rubik</div>
-                <div class="bloccoPlaylist">Cubo di Rubik</div>
-                <div class="bloccoPlaylist">Cubo di Rubik</div>
+                <div class="bloccoPlaylist">Cubo di Rubik<br><button onclick="clickedPlaylist()">Seleziona</button></div>
+                <div class="bloccoPlaylist">Cubo di Rubik<br><button onclick="clickedPlaylist()">Seleziona</button></div>
+                <div class="bloccoPlaylist">Cubo di Rubik<br><button onclick="clickedPlaylist()">Seleziona</button></div>
+                <div class="bloccoPlaylist">Cubo di Rubik<br><button onclick="clickedPlaylist()">Seleziona</button></div>
             </div>
             <div id="elencoCanzoni">
-                <div class="bloccoCanzone"><span class="durataBlock">3:00</span><span class="nomeBlock">Ridere</span><span class="artistaBlock">Simone</span><span class="albumBlock">First Album</span></div>
-                <div class="bloccoCanzone"><span class="durataBlock">3:00</span><span class="nomeBlock">Ridere</span><span class="artistaBlock">Simone</span><span class="albumBlock">First Album</span></div>
-                <div class="bloccoCanzone"><span class="durataBlock">3:00</span><span class="nomeBlock">Ridere</span><span class="artistaBlock">Simone</span><span class="albumBlock">First Album</span></div>
-                <div class="bloccoCanzone"><span class="durataBlock">3:00</span><span class="nomeBlock">Ridere</span><span class="artistaBlock">Simone</span><span class="albumBlock">First Album</span></div>
-                <div class="bloccoCanzone"><span class="durataBlock">3:00</span><span class="nomeBlock">Ridere</span><span class="artistaBlock">Simone</span><span class="albumBlock">First Album</span></div>
-                <div class="bloccoCanzone"><span class="durataBlock">3:00</span><span class="nomeBlock">Ridere</span><span class="artistaBlock">Simone</span><span class="albumBlock">First Album</span></div>
-                <div class="bloccoCanzone"><span class="durataBlock">3:00</span><span class="nomeBlock">Ridere</span><span class="artistaBlock">Simone</span><span class="albumBlock">First Album</span></div>
-                <div class="bloccoCanzone"><span class="durataBlock">3:00</span><span class="nomeBlock">Ridere</span><span class="artistaBlock">Simone</span><span class="albumBlock">First Album</span></div>
+                <div class="bloccoCanzone"><span class="durataBlock">3:00</span><span class="nomeBlock">Ridere</span><span class="artistaBlock">Simone</span><span class="albumBlock">First Album</span><br><button onclick="aggiungiBrano()">Seleziona</button></div>
+                <div class="bloccoCanzone"><span class="durataBlock">3:00</span><span class="nomeBlock">Ridere</span><span class="artistaBlock">Simone</span><span class="albumBlock">First Album</span><br><button onclick="aggiungiBrano()">Seleziona</button></div>
+                <div class="bloccoCanzone"><span class="durataBlock">3:00</span><span class="nomeBlock">Ridere</span><span class="artistaBlock">Simone</span><span class="albumBlock">First Album</span><br><button onclick="aggiungiBrano()">Seleziona</button></div>
+                <div class="bloccoCanzone"><span class="durataBlock">3:00</span><span class="nomeBlock">Ridere</span><span class="artistaBlock">Simone</span><span class="albumBlock">First Album</span><br><button onclick="aggiungiBrano()">Seleziona</button></div>
+                <div class="bloccoCanzone"><span class="durataBlock">3:00</span><span class="nomeBlock">Ridere</span><span class="artistaBlock">Simone</span><span class="albumBlock">First Album</span><br><button onclick="aggiungiBrano()">Seleziona</button></div>
+                <div class="bloccoCanzone"><span class="durataBlock">3:00</span><span class="nomeBlock">Ridere</span><span class="artistaBlock">Simone</span><span class="albumBlock">First Album</span><br><button onclick="aggiungiBrano()">Seleziona</button></div>
+                <div class="bloccoCanzone"><span class="durataBlock">3:00</span><span class="nomeBlock">Ridere</span><span class="artistaBlock">Simone</span><span class="albumBlock">First Album</span><br><button onclick="aggiungiBrano()">Seleziona</button></div>
+                <div class="bloccoCanzone"><span class="durataBlock">3:00</span><span class="nomeBlock">Ridere</span><span class="artistaBlock">Simone</span><span class="albumBlock">First Album</span><br><button onclick="aggiungiBrano()">Seleziona</button></div>
+                <div class="bloccoCanzone"><span class="durataBlock">3:00</span><span class="nomeBlock">Ridere</span><span class="artistaBlock">Simone</span><span class="albumBlock">First Album</span><br><button onclick="aggiungiBrano()">Seleziona</button></div>
+                <div class="bloccoCanzone"><span class="durataBlock">3:00</span><span class="nomeBlock">Ridere</span><span class="artistaBlock">Simone</span><span class="albumBlock">First Album</span><br><button onclick="aggiungiBrano()">Seleziona</button></div>
             </div>
     </main>
 

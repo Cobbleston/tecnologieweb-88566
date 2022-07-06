@@ -12,16 +12,23 @@ main {
     grid-area: center;
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: min-content;
 }
 
 #elencoCanzoni {
     grid-area: right;
 }
 
+#elencoCanzoni button {
+    grid-area: buttonArea;
+}
+
 .bloccoCanzone {
     display: grid;
-    grid-template-rows: 1fr 2fr 2fr 2fr;
-    grid-template-areas: "durata nome artista album";
+    grid-template-rows: 1fr 1fr;
+    grid-template-areas: "durata nome artista album"
+                         "buttonArea buttonArea buttonArea buttonArea";
+    grid-template-columns: 1fr 2fr 2fr 2fr;
 }
 
 .durataBlock {
